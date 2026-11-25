@@ -3,19 +3,15 @@
 //   {"t":"text","d":"..."}            a piece of reply text
 //   {"t":"done","content":[...]}      the full assistant content blocks (sent back unchanged next turn)
 //   {"t":"error","m":"..."}           something went wrong
-import Anthropic from "npm:@anthropic-ai/sdk";
-import { SYSTEM_PROMPT } from "./prompt.generated.ts";
+import Anthropic from "@anthropic-ai/sdk";
+import type { Config } from "@netlify/functions";
+import { SYSTEM_PROMPT } from "../../lib/prompt.generated.mjs";
 
 const MAX_TURNS = 60; // messages kept from the end of the conversation
 const MAX_USER_CHARS = 8000;
 
-declare const Netlify: { env: { get(name: string): string | undefined } };
-
 function json(status: number, body: unknown) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { "content-type": "application/json" },
-  });
+  return Response.json(body, { status });
 }
 
 function samePassword(a: string, b: string) {
@@ -25,7 +21,7 @@ function samePassword(a: string, b: string) {
   return diff === 0;
 }
 
-function today() {
+function now() {
   return new Intl.DateTimeFormat("en-GB", {
     timeZone: "Europe/Berlin",
     weekday: "long",
@@ -38,8 +34,6 @@ function today() {
 }
 
 export default async (req: Request) => {
-  if (req.method !== "POST") return json(405, { error: "Use POST." });
-
   const password = Netlify.env.get("CHAT_PASSWORD");
   const apiKey = Netlify.env.get("ANTHROPIC_API_KEY");
   if (!password || !apiKey) {
@@ -49,7 +43,7 @@ export default async (req: Request) => {
     return json(401, { error: "Wrong password." });
   }
 
-  let body: { messages?: Anthropic.MessageParam[] };
+  let body: { messages?: Anthropic.Beta.Messages.BetaMessageParam[] };
   try {
     body = await req.json();
   } catch {
@@ -81,7 +75,7 @@ export default async (req: Request) => {
           output_config: { effort: "low" },
           system: [
             { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
-            { type: "text", text: `Right now it is ${today()} (Central European Time).` },
+            { type: "text", text: `Right now it is ${now()} (Central European Time).` },
           ],
           messages,
         } as Anthropic.Beta.Messages.MessageCreateParamsStreaming);
@@ -116,4 +110,4 @@ export default async (req: Request) => {
   });
 };
 
-export const config = { path: "/api/chat" };
+export const config: Config = { path: "/api/chat", method: "POST" };

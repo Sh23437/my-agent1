@@ -1,0 +1,13 @@
+{
+  "name": "my-agent1",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.14.0",
+    "@netlify/functions": "^6.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.10",
+    "typescript": "^5.9.3"
+  }
+}

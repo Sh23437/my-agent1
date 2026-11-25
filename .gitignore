@@ -1,3 +1,3 @@
-netlify/edge-functions/prompt.generated.ts
+lib/prompt.generated.mjs
 .netlify/
 node_modules/
