@@ -1,0 +1,10 @@
+[build]
+  command = "node scripts/build-prompt.mjs"
+  publish = "web"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "no-referrer"
+    X-Content-Type-Options = "nosniff"

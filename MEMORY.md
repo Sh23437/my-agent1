@@ -28,6 +28,7 @@ What Claude has learned about me and this project. This repo is **public**, so t
 | `CLAUDE.md` | Rule book for my inbox helper (Role, Goal, Steps, Tone, Never, plus 3 mega-rules) |
 | `chief-of-staff/RULES.md` | Rule book for my chief of staff on Telegram. Some answers are Claude's guesses, still to confirm |
 | `.claude/skills/delivery-feedback/` | Skill that makes a delivery questionnaire page per recipient, saves a Gmail draft with the link, and reads the answers back |
+| `web/`, `netlify/`, `netlify.toml` | Private web chat with my chief of staff, hosted on Netlify. Uses the rule book and this memory as its instructions |
 | `MEMORY.md` | This file |
 
 ## Connections
